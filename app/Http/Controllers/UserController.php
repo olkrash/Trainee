@@ -3,22 +3,34 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+use App\services\UserService;
 
 class UserController extends Controller
 {
+    /**
+     * @var userService created dependency injection
+     */
+    protected $userService;
+
+    /**
+     * UserController constructor
+     * @param UserService $service
+     */
+    public function __construct(UserService $service)
+    {
+        $this->userService = $service;
+    }
+
+    /**
+     * @param StoreUserRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function store(StoreUserRequest $request)
     {
-        $user = new User();
-        $user->email = $request['email'];
-        $user->password = Hash::make($request['password']);
-        $user->remember_token = Str::random(10);
-        $user->save();
-
+        $user = $this->userService->createUser($request->toArray());
         $token = $user->createToken('token')->accessToken;
         $response = ['token' => $token];
+
         return response($response, 201);
     }
 }

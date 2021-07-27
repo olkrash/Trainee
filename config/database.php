@@ -42,6 +42,12 @@ return [
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
+    // Following setup ensures that testing framework (PHPUnit) uses :memory: database.
+        'sqlite_testing' => [
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
+        ],
 
         'mysql' => [
             'driver' => 'mysql',
