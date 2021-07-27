@@ -20,7 +20,6 @@ class StoreUserRequest extends FormRequest
         return true;
     }
 
-    //todo return json error if request is irrelevant
     /**
      * Get the validation rules that apply to the request.
      *
