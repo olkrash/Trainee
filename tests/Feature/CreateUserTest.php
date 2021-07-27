@@ -16,9 +16,7 @@ class CreateUserTest extends TestCase
         Artisan::call('passport:install');
     }
 
-    /**
-     *
-     */
+
     public function testRegister()
     {
         $data = [
