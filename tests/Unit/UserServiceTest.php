@@ -29,11 +29,11 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @dataProvider  userProvider
+     * @dataProvider  createProvider
      */
-    public function testCreateUser(array $data)
+    public function testCreate(array $data)
     {
-        $user = $this->userService->createUser($data);
+        $user = $this->userService->create($data);
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals($data['email'], $user->email);
         $this->assertNotEmpty($user->password);
@@ -46,7 +46,7 @@ class UserServiceTest extends TestCase
     /**
      * @return string[][][]
      */
-    public function userProvider(): array
+    public function createProvider(): array
     {
         return [
             [
@@ -55,6 +55,49 @@ class UserServiceTest extends TestCase
                     'password' => 'test'
                 ],
             ]
+        ];
+    }
+
+    /**
+     * @dataProvider  loginProvider
+     */
+    public function testLogin($email, $password = '')
+    {
+        $data['email'] = 'email@email';
+        $data['password'] = '$2y$10$6tHbQJQzyaVh96hRzVl.feBdNBAFdcIYmjy2Um0f07yhyb0eZk4hy';
+        User::factory()->create($data);
+
+        $data['password'] = $password;
+        $data['email'] = $email;
+        $user = $this->userService->login($data);
+
+        if ($password === '') {
+            $this->assertNull($user);
+            return;
+        }
+
+        $this->assertInstanceOf(User::class, $user);
+    }
+
+    /**
+     * @return string[][]
+     */
+    public function loginProvider(): array
+    {
+        return [
+            //first run of testLogin
+            [
+                'email@email',
+                '34567sg',
+            ],
+            //second run of testLogin
+            [
+                'test@test'
+            ],
+            //third run of testLogin
+            [
+                'email@email',
+            ],
         ];
     }
 }

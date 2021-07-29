@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\services\UserService;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -27,10 +29,26 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $user = $this->userService->createUser($request->toArray());
+        $user = $this->userService->create($request->toArray());
         $token = $user->createToken('token')->accessToken;
         $response = ['token' => $token];
 
         return response($response, 201);
+    }
+
+    /**
+     * @param LoginUserRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response|string[]
+     */
+    public function login(LoginUserRequest $request)
+    {
+        $user = $this->userService->login($request->toArray());
+        if ($user === null) {
+            return ['errors'=> 'user not found'];
+        }
+        $token = $user->createToken('token')->accessToken;
+        $response = ['token' => $token];
+
+        return $response;
     }
 }

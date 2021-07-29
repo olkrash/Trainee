@@ -2,11 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class CreateUserTest extends TestCase
+class UserTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -16,8 +17,7 @@ class CreateUserTest extends TestCase
         Artisan::call('passport:install');
     }
 
-
-    public function testRegister()
+    public function testRegister(): void
     {
         $data = [
             'email' => 'email@email',
@@ -30,4 +30,6 @@ class CreateUserTest extends TestCase
                 'token',
             ]);
     }
+
+
 }
