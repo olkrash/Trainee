@@ -31,5 +31,26 @@ class UserTest extends TestCase
             ]);
     }
 
+    /**
+     *
+     */
+    public function testLogin():void
+    {
+        User::factory()->create([
+            'email' => 'email@email',
+            'password' => '$2y$10$6tHbQJQzyaVh96hRzVl.feBdNBAFdcIYmjy2Um0f07yhyb0eZk4hy'
+        ]);
+
+        $data = [
+            'email' => 'email@email',
+            'password' => '34567sg',
+        ];
+        $response = $this->postJson("api/users/login", $data);
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'token',
+            ]);
+    }
+
 
 }
