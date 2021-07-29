@@ -2,8 +2,10 @@
 
 namespace App\services;
 
+use App\Models\ResetPassword;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class UserService
@@ -44,4 +46,21 @@ class UserService
         return null;
     }
 
+    public function resetPassword(string $email): bool
+    {
+        $user = User::where('email', $email)->first();
+        //if $user not found
+        if ($user === null) {
+            return false;
+        }
+
+        $resetPassword = new ResetPassword();
+        $resetPassword->user_id = $user->id;
+        $resetPassword->token = Str::random(10);
+        $resetPassword->save();
+
+        Mail::to($email)->send(new \App\Mail\ResetPassword($resetPassword->token));
+
+        return true;
+    }
 }

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginUserRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\StoreUserRequest;
+use App\Models\ResetPassword;
 use App\services\UserService;
 use Illuminate\Support\Facades\Hash;
 
@@ -50,5 +52,10 @@ class UserController extends Controller
         $response = ['token' => $token];
 
         return $response;
+    }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+       $result = $this->userService->resetPassword($request->get('email'));
     }
 }
