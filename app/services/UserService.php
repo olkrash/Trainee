@@ -12,7 +12,7 @@ class UserService
      * @param array $data array from StoreUserRequest
      * @return User
      */
-    public function createUser(array $data): User
+    public function create(array $data): User
     {
         $user = new User();
         $user->email = $data['email'];
@@ -22,4 +22,26 @@ class UserService
 
         return $user;
     }
+
+    /**
+     * @param array $data
+     * @return User|null
+     */
+    public function login(array $data): ?User
+    {
+        $user = User::where('email', $data['email'])->first();
+        //if $user not found
+        if ($user === null) {
+            return null;
+        }
+
+        //if $user found and password is correct
+        if (Hash::check($data['password'], $user->password)) {
+            return $user;
+        }
+
+        //if $user found and password is incorrect
+        return null;
+    }
+
 }
