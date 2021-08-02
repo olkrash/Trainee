@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\ResetPassword;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -39,7 +40,7 @@ class UserTest extends TestCase
     {
         User::factory()->create([
             'email' => 'email@email',
-            'password' => '$2y$10$6tHbQJQzyaVh96hRzVl.feBdNBAFdcIYmjy2Um0f07yhyb0eZk4hy'
+            'password' => Hash::make('34567sg')
         ]);
 
         $data = [
