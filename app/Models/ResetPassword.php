@@ -19,5 +19,7 @@ class ResetPassword extends Model
      */
     protected $fillable = ['user_id', 'token'];
 
+    protected $dates = ['created_at', 'updated_at'];
+
     use HasFactory;
 }

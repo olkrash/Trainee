@@ -59,7 +59,7 @@ class UserServiceTest extends TestCase
     }
 
     /**
-     * @dataProvider  loginProvider
+     * @dataProvider loginProvider
      */
     public function testLogin($email, $password = '')
     {

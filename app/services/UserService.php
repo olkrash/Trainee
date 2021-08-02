@@ -2,6 +2,7 @@
 
 namespace App\services;
 
+use Carbon\Carbon;
 use App\Models\ResetPassword;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -63,4 +64,31 @@ class UserService
 
         return true;
     }
+
+    public function changePassword(string $token, string $password): bool
+    {
+        $resetPassword = ResetPassword::where('token', $token)->first();
+        //if $user not found
+        if ($resetPassword === null) {
+            return false;
+        }
+
+        $user = User::where('id', $resetPassword->user_id)->first();
+        //if $user not found
+        if ($user === null) {
+            return false;
+        }
+
+        $diff = $resetPassword->created_at->diffInHours(Carbon::now());
+        if ($diff > 2) {
+            return false;
+        }
+
+        $user->password = Hash::make($password);
+        $user->save();
+        $resetPassword->delete();
+
+        return true;
+    }
+
 }
