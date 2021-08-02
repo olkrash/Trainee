@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ResetPassword extends Model
 {
+    use HasFactory;
     /**
      * The table associated with the model.
      *
@@ -21,5 +22,4 @@ class ResetPassword extends Model
 
     protected $dates = ['created_at', 'updated_at'];
 
-    use HasFactory;
 }

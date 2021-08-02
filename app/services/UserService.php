@@ -47,6 +47,10 @@ class UserService
         return null;
     }
 
+    /**
+     * @param string $email
+     * @return bool
+     */
     public function resetPassword(string $email): bool
     {
         $user = User::where('email', $email)->first();
@@ -65,6 +69,11 @@ class UserService
         return true;
     }
 
+    /**
+     * @param string $token
+     * @param string $password
+     * @return bool
+     */
     public function changePassword(string $token, string $password): bool
     {
         $resetPassword = ResetPassword::where('token', $token)->first();
