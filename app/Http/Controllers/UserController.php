@@ -6,6 +6,7 @@ use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\services\UserService;
 
 class UserController extends Controller
@@ -65,5 +66,12 @@ class UserController extends Controller
         $result = $this->userService->changePassword($request->get('token'), $request->get('password'));
 
         return ['success' => $result];
+    }
+
+    public function update(UpdateUserRequest $request)
+    {
+        $this->userService->update($request->toArray());
+
+        return ['success' => true];
     }
 }

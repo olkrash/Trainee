@@ -2,9 +2,11 @@
 
 namespace App\services;
 
+use App\Models\UpdateUser;
 use Carbon\Carbon;
 use App\Models\ResetPassword;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -98,5 +100,19 @@ class UserService
         $resetPassword->delete();
 
         return true;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function update(array $data): void
+    {
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
+        //to ask for usage of Gate or Policy, otherwise Auth facade can find that
+        $id = Auth::user()->id;
+        User::find($id)->update($data);
     }
 }
