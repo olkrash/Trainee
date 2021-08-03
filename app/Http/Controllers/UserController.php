@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\LoginUserRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\services\UserService;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -44,11 +45,25 @@ class UserController extends Controller
     {
         $user = $this->userService->login($request->toArray());
         if ($user === null) {
-            return ['errors'=> 'user not found'];
+            return ['errors' => 'user not found'];
         }
         $token = $user->createToken('token')->accessToken;
         $response = ['token' => $token];
 
         return $response;
+    }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        $result = $this->userService->resetPassword($request->get('email'));
+
+        return ['success' => $result];
+    }
+
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        $result = $this->userService->changePassword($request->get('token'), $request->get('password'));
+
+        return ['success' => $result];
     }
 }
