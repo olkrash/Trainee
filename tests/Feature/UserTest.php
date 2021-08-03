@@ -2,10 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Models\ResetPassword;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ResetPassword;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -33,9 +34,6 @@ class UserTest extends TestCase
             ]);
     }
 
-    /**
-     *
-     */
     public function testLogin(): void
     {
         User::factory()->create([
@@ -61,7 +59,11 @@ class UserTest extends TestCase
             'password' => '$2y$10$6tHbQJQzyaVh96hRzVl.feBdNBAFdcIYmjy2Um0f07yhyb0eZk4hy'
         ]);
 
+        Mail::fake();
+
         $response = $this->getJson("api/users/reset_password?email=email@email");
+
+        Mail::assertSent(ResetPassword::class);
         $response->assertExactJson(['success' => true]);
     }
 

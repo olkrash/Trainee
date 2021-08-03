@@ -151,7 +151,7 @@ class UserServiceTest extends TestCase
         return [
             ['token', 1, Carbon::now()],
             ['123456', 5, Carbon::now()],
-            ['123456', 1, Carbon::now()->subHours(-4)],
+            ['123456', 1, Carbon::now()->subHours(4)],
             ['123456', 1, Carbon::now(), true],
         ];
     }
