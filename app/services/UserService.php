@@ -105,14 +105,24 @@ class UserService
     /**
      * @param array $data
      */
-    public function update(array $data): void
+    public function update(int $id, array $data): bool
     {
+        $user = User::find($id);
+        //if $user not found
+        if ($user === null) {
+            return false;
+        }
+
+        if (Auth::user()->cannot('update', $user)) {
+            return false;
+        }
+
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
 
-        //to ask for usage of Gate or Policy, otherwise Auth facade can find that
-        $id = Auth::user()->id;
-        User::find($id)->update($data);
+        $user->update($data);
+
+        return true;
     }
 }
