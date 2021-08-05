@@ -7,7 +7,6 @@ use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Models\User;
 use App\services\UserService;
 
 class UserController extends Controller
