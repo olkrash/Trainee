@@ -103,7 +103,10 @@ class UserService
     }
 
     /**
+     * @param int $id
      * @param array $data
+     *
+     * @return bool
      */
     public function update(int $id, array $data): bool
     {
