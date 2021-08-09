@@ -2,9 +2,11 @@
 
 namespace App\services;
 
+use App\Models\UpdateUser;
 use Carbon\Carbon;
 use App\Models\ResetPassword;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -96,6 +98,33 @@ class UserService
         $user->password = Hash::make($password);
         $user->save();
         $resetPassword->delete();
+
+        return true;
+    }
+
+    /**
+     * @param int $id
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function update(int $id, array $data): bool
+    {
+        $user = User::find($id);
+        //if $user not found
+        if ($user === null) {
+            return false;
+        }
+
+        if (Auth::user()->cannot('update', $user)) {
+            return false;
+        }
+
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
+        $user->update($data);
 
         return true;
     }

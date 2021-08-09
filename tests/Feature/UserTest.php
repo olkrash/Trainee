@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ResetPassword;
+use App\Models\ResetPassword;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
@@ -63,7 +63,7 @@ class UserTest extends TestCase
 
         $response = $this->getJson("api/users/reset_password?email=email@email");
 
-        Mail::assertSent(ResetPassword::class);
+        Mail::assertSent(\App\Mail\ResetPassword::class);
         $response->assertExactJson(['success' => true]);
     }
 
@@ -86,6 +86,25 @@ class UserTest extends TestCase
             'password_confirmation' => '34567sg',
         ];
         $response = $this->putJson('api/users/change_password', $data);
+        $response->assertExactJson(['success' => true]);
+    }
+
+    public function testUpdate(): void
+    {
+        $user = User::factory()->create([
+            'id' => 1,
+            'email' => 'email@email',
+            'password' => '$2y$10$6tHbQJQzyaVh96hRzVl.feBdNBAFdcIYmjy2Um0f07yhyb0eZk4hy'
+        ]);
+
+        $data = [
+            'email' => 'test1@test1',
+            'password' => '34567sg',
+            'password_confirmation' => '34567sg',
+        ];
+
+        $response = $this->actingAs($user, 'api')->putJson('api/users/1', $data);
+
         $response->assertExactJson(['success' => true]);
     }
 }

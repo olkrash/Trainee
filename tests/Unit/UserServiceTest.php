@@ -7,6 +7,7 @@ use App\Models\User;
 use App\services\UserService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
@@ -153,6 +154,42 @@ class UserServiceTest extends TestCase
             ['123456', 5, Carbon::now()],
             ['123456', 1, Carbon::now()->subHours(4)],
             ['123456', 1, Carbon::now(), true],
+        ];
+    }
+
+    /**
+     * @dataProvider updateProvider
+     */
+    public function testUpdate(int $id, bool $expected = false)
+    {
+        User::factory()->create([
+            'id' => 1,
+            'email' => 'email@email',
+            'password' => '123456',
+        ]);
+
+        User::factory()->create([
+            'id' => 3,
+            'email' => 'email@email1',
+            'password' => '1234567',
+        ]);
+
+        $user = User::find(1);
+        Auth::login($user);
+
+        $data['email'] = 'update@test';
+        $data['password'] = '12345';
+        $actual = $this->userService->update($id, $data);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function updateProvider(): array
+    {
+        return [
+            [1, true],
+            [2],
+            [3],
         ];
     }
 }
