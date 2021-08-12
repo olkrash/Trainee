@@ -131,25 +131,6 @@ class UserService
 
     public function index(): array
     {
-        $collection = User::all();
-
-        $plucked = $collection->pluck('email');
-
-        return $plucked->all();
-    }
-
-    public function view(int $id): ?User
-    {
-        $user = User::find($id);
-        //if $user not found
-        if ($user === null) {
-            return null;
-        }
-
-        if (Auth::user()->cannot('view', $user)) {
-            return null;
-        }
-
-        return $user;
+        return User::all()->pluck('email')->toArray();
     }
 }

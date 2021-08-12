@@ -22,7 +22,7 @@ Route::prefix('users')->group(function () {
 
     Route::middleware(['auth:api'])->group(function () {
         Route::put('/{id}', 'App\Http\Controllers\UserController@update');
-        Route::get('/{id}', 'App\Http\Controllers\UserController@view');
+        Route::get('/{user}', 'App\Http\Controllers\UserController@show');
     });
 });
 

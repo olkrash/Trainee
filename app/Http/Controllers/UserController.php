@@ -7,9 +7,10 @@ use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Http\Resources\User;
+use App\models\User;
 use App\Http\Resources\UserResource;
 use App\services\UserService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
 class UserController extends Controller
@@ -98,13 +99,12 @@ class UserController extends Controller
         return ['users' => $result];
     }
 
-    public function view(Request $request, int $id)
+    public function show(User $user)
     {
-        $result = $this->userService->view($id);
-        if ($result === null) {
+        if (Auth::user()->cannot('view', $user)) {
             return response()->json(null, 403);
         }
 
-        return new UserResource($result);
+        return new UserResource($user);
     }
 }

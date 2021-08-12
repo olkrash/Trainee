@@ -193,7 +193,7 @@ class UserServiceTest extends TestCase
         ];
     }
 
-    public function testList()
+    public function testIndex()
     {
         User::factory()->create([
             'id' => 1,
@@ -207,50 +207,9 @@ class UserServiceTest extends TestCase
             'password' => '1234567',
         ]);
 
-        $actual = $this->userService->list();
+        $actual = $this->userService->index();
         $expected = ["email@email", "email@email1"];
 
         $this->assertEquals($expected, $actual);
-    }
-
-    /**
-     * @dataProvider viewProvider
-     */
-    public function testView(int $id, bool $expected = false)
-    {
-        User::factory()->create([
-            'created_at' => "2021-08-12T10:44:56.000000Z",
-            'id' => 3,
-            'email' => 'email2@email2',
-            'password' => '$2y$10',
-            "updated_at" => "2021-08-12T10:44:56.000000Z",
-        ]);
-
-        $user = User::factory()->create([
-            'created_at' => "2021-08-12T10:44:56.000000Z",
-            'id' => 2,
-            'email' => 'email2@email',
-            'password' => '$2y$10',
-            "updated_at" => "2021-08-12T10:44:56.000000Z",
-        ]);
-        Auth::login($user);
-
-        $actual = $this->userService->view($id);
-
-        if (!$expected) {
-            $this->assertNull($actual);
-            return;
-        }
-
-        $this->assertEquals($user->id, $actual->id);
-    }
-
-    public function viewProvider(): array
-    {
-        return [
-            [1],
-            [3],
-            [2, true],
-        ];
     }
 }

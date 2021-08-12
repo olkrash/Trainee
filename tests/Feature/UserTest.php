@@ -134,7 +134,6 @@ class UserTest extends TestCase
             'email' => 'email2@email',
             'password' => '$2y$10',
             "updated_at" => "2021-08-12T10:44:56.000000Z",
-
         ]);
 
         $response = $this->actingAs($user, 'api')->getJson('api/users/2');
