@@ -7,7 +7,10 @@ use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\User;
+use App\Http\Resources\UserResource;
 use App\services\UserService;
+use Illuminate\Support\Facades\Request;
 
 class UserController extends Controller
 {
@@ -86,5 +89,22 @@ class UserController extends Controller
         $result = $this->userService->update($id, $request->toArray());
 
         return ['success' => $result];
+    }
+
+    public function list()
+    {
+        $result = $this->userService->list();
+
+        return ['users' => $result];
+    }
+
+    public function view(Request $request, int $id)
+    {
+        $result = $this->userService->view($id);
+        if ($result === null) {
+            return response()->json(null, 403);
+        }
+
+        return new UserResource($result);
     }
 }
