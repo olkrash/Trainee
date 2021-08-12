@@ -129,7 +129,7 @@ class UserService
         return true;
     }
 
-    public function list(): array
+    public function index(): array
     {
         $collection = User::all();
 

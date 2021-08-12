@@ -91,9 +91,9 @@ class UserController extends Controller
         return ['success' => $result];
     }
 
-    public function list()
+    public function index()
     {
-        $result = $this->userService->list();
+        $result = $this->userService->index();
 
         return ['users' => $result];
     }
