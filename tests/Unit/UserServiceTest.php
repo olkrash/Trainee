@@ -192,4 +192,24 @@ class UserServiceTest extends TestCase
             [3],
         ];
     }
+
+    public function testIndex()
+    {
+        User::factory()->create([
+            'id' => 1,
+            'email' => 'email@email',
+            'password' => '123456',
+        ]);
+
+        User::factory()->create([
+            'id' => 2,
+            'email' => 'email@email1',
+            'password' => '1234567',
+        ]);
+
+        $actual = $this->userService->index();
+        $expected = ["email@email", "email@email1"];
+
+        $this->assertEquals($expected, $actual);
+    }
 }

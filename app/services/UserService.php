@@ -128,4 +128,9 @@ class UserService
 
         return true;
     }
+
+    public function index(): array
+    {
+        return User::all()->pluck('email')->toArray();
+    }
 }

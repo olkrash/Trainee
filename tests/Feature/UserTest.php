@@ -107,4 +107,42 @@ class UserTest extends TestCase
 
         $response->assertExactJson(['success' => true]);
     }
+
+    public function testList(): void
+    {
+        User::factory()->create([
+            'id' => 1,
+            'email' => 'email@email',
+            'password' => '$2y$10$6tHbQJQzyaVh96hRzVl.feBdNBAFdcIYmjy2Um0f07yhyb0eZk4hy'
+        ]);
+        User::factory()->create([
+            'id' => 2,
+            'email' => 'email2@email',
+            'password' => '$2y$10'
+        ]);
+
+        $response = $this->getJson('api/users/');
+
+        $response->assertExactJson(["users" => ["email@email", "email2@email"]]);
+    }
+
+    public function testView(): void
+    {
+        $user = User::factory()->create([
+            'created_at'=> "2021-08-12T10:44:56.000000Z",
+            'id' => 2,
+            'email' => 'email2@email',
+            'password' => '$2y$10',
+            "updated_at" => "2021-08-12T10:44:56.000000Z",
+        ]);
+
+        $response = $this->actingAs($user, 'api')->getJson('api/users/2');
+
+        $response->assertExactJson(['data' => [
+            'created_at'=> "2021-08-12T10:44:56.000000Z",
+            'id' => 2,
+            'email' => 'email2@email',
+            "updated_at" => "2021-08-12T10:44:56.000000Z"]]);
+
+    }
 }
