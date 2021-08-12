@@ -10,8 +10,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\models\User;
 use App\Http\Resources\UserResource;
 use App\services\UserService;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -99,9 +98,9 @@ class UserController extends Controller
         return ['users' => $result];
     }
 
-    public function show(User $user)
+    public function show(Request $request,User $user)
     {
-        if (Auth::user()->cannot('view', $user)) {
+        if ($request->user()->cannot('view', $user)) {
             return response()->json(null, 403);
         }
 
