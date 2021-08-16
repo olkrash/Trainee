@@ -3,11 +3,11 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\App;
 
-class ChangePassword extends Mailable
+class DeleteUser extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -16,10 +16,9 @@ class ChangePassword extends Mailable
      *
      * @return void
      */
-    public function __construct(string $token )
+    public function __construct()
     {
-        $this->token = $token;
-//        $this->password = $password;
+        //
     }
 
     /**
@@ -29,6 +28,8 @@ class ChangePassword extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.change.password');
+        $pdf = App::make('dompdf.wrapper')->loadView('emails.users.leave_pdf');
+
+        return $this->attachData($pdf->output(), "text.pdf")->markdown('emails.users.delete');
     }
 }

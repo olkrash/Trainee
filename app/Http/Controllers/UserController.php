@@ -98,12 +98,23 @@ class UserController extends Controller
         return ['users' => $result];
     }
 
-    public function show(Request $request,User $user)
+    public function show(Request $request, User $user)
     {
         if ($request->user()->cannot('view', $user)) {
             return response()->json(null, 403);
         }
 
         return new UserResource($user);
+    }
+
+    public function delete(Request $request, User $user)
+    {
+        if ($request->user()->cannot('update', $user)) {
+            return response()->json(null, 403);
+        }
+
+        $result = $this->userService->delete($user);
+
+        return ['success' => $result];
     }
 }

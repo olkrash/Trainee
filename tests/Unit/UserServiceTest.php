@@ -212,4 +212,20 @@ class UserServiceTest extends TestCase
 
         $this->assertEquals($expected, $actual);
     }
+
+    public function testDelete()
+    {
+        $user = User::factory()->create([
+            'id' => 1,
+            'email' => 'email@email',
+            'password' => '123456',
+            'status' => User::ACTIVE,
+        ]);
+
+        $actual = $this->userService->delete($user);
+        $this->assertTrue($actual);
+        $this->assertDatabaseHas('users', [
+            'status' => User::INACTIVE,
+        ]);
+    }
 }

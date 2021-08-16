@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Mail\DeleteUser;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
@@ -144,5 +145,22 @@ class UserTest extends TestCase
             'email' => 'email2@email',
             "updated_at" => "2021-08-12T10:44:56.000000Z"]]);
 
+    }
+
+    public function testDelete(): void
+    {
+        $user = User::factory()->create([
+            'created_at' => "2021-08-12T10:44:56.000000Z",
+            'id' => 2,
+            'email' => 'email2@email',
+            'password' => '$2y$10',
+            "status" => User::ACTIVE,
+        ]);
+
+        Mail::fake();
+        $response = $this->actingAs($user, 'api')->deleteJson('api/users/2');
+
+        Mail::assertSent(DeleteUser::class);
+        $response->assertExactJson(['success' => true]);
     }
 }

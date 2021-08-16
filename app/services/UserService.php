@@ -2,7 +2,7 @@
 
 namespace App\services;
 
-use App\Models\UpdateUser;
+use App\Mail\DeleteUser;
 use Carbon\Carbon;
 use App\Models\ResetPassword;
 use App\Models\User;
@@ -132,5 +132,15 @@ class UserService
     public function index(): array
     {
         return User::all()->pluck('email')->toArray();
+    }
+
+    public function delete(User $user): bool
+    {
+        $user->status = User::INACTIVE;
+        $user->save();
+
+        Mail::to($user->email)->send(new DeleteUser());
+
+        return true;
     }
 }
